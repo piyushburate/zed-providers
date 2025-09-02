@@ -1,12 +1,3 @@
-import { AxiosStatic } from "axios";
-import * as cheerio from "cheerio";
-
-// Content type for providers (replaces zustand import)
-// export interface Content {
-//   provider: string;
-//   [key: string]: any;
-// }
-
 // getPosts
 export interface Post {
   title: string;
@@ -30,6 +21,7 @@ export interface Stream {
   quality?: "360" | "480" | "720" | "1080" | "2160";
   size?: string;
   subtitles?: TextTracks;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   headers?: any;
 }
 

@@ -1,7 +1,4 @@
 import { hubcloudExtracter } from "@/extractors/hubCloudExtractor";
-import { Stream } from "@/lib/types";
-import axios from "axios";
-import * as cheerio from "cheerio";
 
 const headers = {
   Accept:
@@ -47,11 +44,8 @@ export async function getStream({
     }
 
     return await hubcloudExtracter(link, signal);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("getStream error: ", error);
-    if (error.message.includes("Aborted")) {
-    } else {
-    }
     return [];
   }
 }

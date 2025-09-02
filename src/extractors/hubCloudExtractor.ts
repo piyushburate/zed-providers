@@ -41,7 +41,7 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
     const linkClass = $("a.btn-success.btn-lg.h6,a.btn-danger,a.btn-secondary");
     for (const element of linkClass) {
       const itm = $(element);
-      let link = itm.attr("href") || "";
+      const link = itm.attr("href") || "";
       if (link?.includes("workers.dev")) {
         streamLinks.push({ server: "cfWorker", type: "mkv", link, size });
       } else if (link?.includes("pixeld")) {

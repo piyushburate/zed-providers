@@ -38,8 +38,7 @@ export const getEpisodes = async function ({
     console.log(episodes);
     return episodes;
   } catch (err) {
-    console.log("getEpisodeLinks error: ");
-    // console.error(err);
+    console.error("getEpisodeLinks error:", err);
     return [];
   }
 };

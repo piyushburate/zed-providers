@@ -1,7 +1,6 @@
 import { Info, Link } from "@/lib/types";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { info } from "console";
 
 const headers = {
   Accept:
@@ -39,7 +38,6 @@ export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
     const infoContainer = $(".entry-content,.post-inner");
     const heading = infoContainer?.find("h3");
     const imdbId =
-      //@ts-ignore
       heading?.next("p")?.find("a")?.[0]?.attribs?.href?.match(/tt\d+/g)?.[0] ||
       infoContainer.text().match(/tt\d+/g)?.[0] ||
       "";
@@ -55,14 +53,14 @@ export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
     //   console.log(title);
 
     // synopsis
-    const synopsisNode = //@ts-ignore
+    const synopsisNode =
       infoContainer?.find("p")?.next("h3,h4")?.next("p")?.[0]?.children?.[0];
     const synopsis =
       synopsisNode && "data" in synopsisNode ? synopsisNode.data : "";
     //   console.log(synopsis);
 
     // image
-    let image = infoContainer
+    const image = infoContainer
       ?.find('*:contains("Screenshots")')
       .next()
       .children("img")
@@ -76,7 +74,7 @@ export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
     );
 
     const links: Link[] = [];
-    list.each((_, element: any) => {
+    list.each((_, element) => {
       const sizeRegex = /[\[\(\{]?\s*(\d+(?:\.\d+)?\s*(?:MB|GB|TB))\s*[\]\)\}]?/i;
       const qualityRegex = /(\d{3,4}p)/;
 
