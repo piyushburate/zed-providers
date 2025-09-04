@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio";
 import { Stream } from "@/lib/types";
 import { headers } from "@/lib/headers";
+import axios from "axios";
 
 const decode = function (value: string) {
   if (value === undefined) {
@@ -15,16 +16,15 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
     const baseUrl = link.split("/").slice(0, 3).join("/");
     const host = new URL(link).host;
     const streamLinks: Stream[] = [];
-    const vLinkRes = await fetch(link, {
+    const vLinkRes = await axios.get(link, {
       headers: {
         ...headers,
-        credentials: "include",
-        'Host': host,
-        },
-      signal,
+        Host: host,
+      },
+      withCredentials: true,
     });
 
-    const vLinkText = await vLinkRes.text();
+    const vLinkText = vLinkRes.data;
     console.log("vLinkText", vLinkText);
     const $vLink = cheerio.load(vLinkText);
     const vLinkRedirect = vLinkText.match(/var\s+url\s*=\s*'([^']+)';/) || [];
