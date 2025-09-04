@@ -15,12 +15,12 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
     console.log("hubcloudExtracter", link);
     const baseUrl = link.split("/").slice(0, 3).join("/");
     const streamLinks: Stream[] = [];
-    const vLinkRes = await axios.get(link, {
+    const vLinkRes = await fetch(link, {
       headers,
       signal,
     });
 
-    const vLinkText = vLinkRes.data;
+    const vLinkText = await vLinkRes.text();
     console.log("vLinkText", vLinkText);
     const $vLink = cheerio.load(vLinkText);
     const vLinkRedirect = vLinkText.match(/var\s+url\s*=\s*'([^']+)';/) || [];
