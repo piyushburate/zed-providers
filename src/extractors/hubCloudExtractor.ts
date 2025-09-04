@@ -13,11 +13,13 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
   try {
     console.log("hubcloudExtracter", link);
     const baseUrl = link.split("/").slice(0, 3).join("/");
+    const host = new URL(link).host;
     const streamLinks: Stream[] = [];
     const vLinkRes = await fetch(link, {
       headers: {
         ...headers,
         credentials: "include",
+        'Host': host,
         },
       signal,
     });
