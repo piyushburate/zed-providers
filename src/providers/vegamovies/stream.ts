@@ -1,3 +1,5 @@
+"use server";
+
 import { hubcloudExtracter } from "@/extractors/hubCloudExtractor";
 import { headers } from "@/lib/headers";
 import axios from "axios";
