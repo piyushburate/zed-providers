@@ -15,8 +15,11 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
     console.log("hubcloudExtracter", link);
     const baseUrl = link.split("/").slice(0, 3).join("/");
     const streamLinks: Stream[] = [];
-    const vLinkRes = await axios(`${link}`, {
-      headers: { cookie: "test_cookie", ...headers },
+    const vLinkRes = await axios(link, {
+      headers: { 
+      referer: baseUrl,
+      ...headers 
+      },
       signal,
     });
 
