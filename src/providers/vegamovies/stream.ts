@@ -1,5 +1,6 @@
 import { hubcloudExtracter } from "@/extractors/hubCloudExtractor";
 import { headers } from "@/lib/headers";
+import axios from "axios";
 
 // const headers = {
 //   Accept:
@@ -36,15 +37,15 @@ export async function getStream({
     console.log("dotlink", link);
     if (type == "direct" || type == "batch") {
       // vlink
-      const dotlinkRes = await fetch(`${link}`, {
+      const dotlinkRes = await axios.get(link, {
         headers: {
           ...headers,
           cookie:
             "ext_name=ojplmecpdpgccookcobabopnaifgidhf; cf_clearance=Zl2yiOCN3pzGUd0Bgs.VyBXniJooDbG2Tk1g7DEoRnw-1756381111-1.2.1.1-RVPZoWGCAygGNAHavrVR0YaqASWZlJyYff8A.oQfPB5qbcPrAVud42BzsSwcDgiKAP0gw5D92V3o8XWwLwDRNhyg3DuL1P8wh2K4BCVKxWvcy.iCCxczKtJ8QSUAsAQqsIzRWXk29N6X.kjxuOTYlfB2jrlq12TRDld_zTbsskNcTxaA.XQekUcpGLseYqELuvlNOQU568NZD6LiLn3ICyFThMFAx6mIcgXkxVAvnxU; xla=s4t",
         },
       });
-      const dotlinkText = await dotlinkRes.text();
-      console.log('dotlinkText', dotlinkText);
+      const dotlinkText = dotlinkRes.data;
+      console.log("dotlinkText", dotlinkText);
       const vlink = dotlinkText.match(/<a\s+href="([^"]*cloud\.[^"]*)"/i) || [];
       // console.log('vLink', vlink[1]);
       link = vlink[1];
