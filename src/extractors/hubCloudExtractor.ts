@@ -1,4 +1,3 @@
-import axios from "axios";
 import * as cheerio from "cheerio";
 import { Stream } from "@/lib/types";
 import { headers } from "@/lib/headers";
@@ -16,7 +15,11 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
     const baseUrl = link.split("/").slice(0, 3).join("/");
     const streamLinks: Stream[] = [];
     const vLinkRes = await fetch(link, {
-      headers,
+      headers: {
+        ...headers,
+        cookie:
+          "ext_name=ojplmecpdpgccookcobabopnaifgidhf; cf_clearance=Zl2yiOCN3pzGUd0Bgs.VyBXniJooDbG2Tk1g7DEoRnw-1756381111-1.2.1.1-RVPZoWGCAygGNAHavrVR0YaqASWZlJyYff8A.oQfPB5qbcPrAVud42BzsSwcDgiKAP0gw5D92V3o8XWwLwDRNhyg3DuL1P8wh2K4BCVKxWvcy.iCCxczKtJ8QSUAsAQqsIzRWXk29N6X.kjxuOTYlfB2jrlq12TRDld_zTbsskNcTxaA.XQekUcpGLseYqELuvlNOQU568NZD6LiLn3ICyFThMFAx6mIcgXkxVAvnxU; xla=s4t",
+      },
       signal,
     });
 
