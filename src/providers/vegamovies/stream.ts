@@ -44,7 +44,7 @@ export async function getStream({
         },
       });
       const dotlinkText = await dotlinkRes.text();
-      // console.log('dotlinkText', dotlinkText);
+      console.log('dotlinkText', dotlinkText);
       const vlink = dotlinkText.match(/<a\s+href="([^"]*cloud\.[^"]*)"/i) || [];
       // console.log('vLink', vlink[1]);
       link = vlink[1];
