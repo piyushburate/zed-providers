@@ -66,7 +66,7 @@ export const getSearchPosts = async ({
 async function posts(
   baseUrl: string,
   url: string,
-  signal: AbortSignal,
+  signal: AbortSignal
 ): Promise<Post[]> {
   try {
     const urlRes = await fetch(url, {

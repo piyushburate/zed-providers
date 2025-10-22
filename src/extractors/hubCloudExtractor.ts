@@ -25,7 +25,7 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
     });
 
     const vLinkText = vLinkRes.data;
-    console.log("vLinkText", vLinkText);
+    // console.log("vLinkText", vLinkText);
     const $vLink = cheerio.load(vLinkText);
     const vLinkRedirect = vLinkText.match(/var\s+url\s*=\s*'([^']+)';/) || [];
     let vcloudLink =

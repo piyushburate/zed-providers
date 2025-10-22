@@ -53,8 +53,8 @@ export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
     //   console.log(title);
 
     // synopsis
-    const synopsisNode =
-      infoContainer?.find("p")?.next("h3,h4")?.next("p")?.[0]?.children?.[0];
+    const synopsisNode = infoContainer?.find("p")?.next("h3,h4")?.next("p")?.[0]
+      ?.children?.[0];
     const synopsis =
       synopsisNode && "data" in synopsisNode ? synopsisNode.data : "";
     //   console.log(synopsis);
@@ -75,7 +75,8 @@ export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
 
     const links: Link[] = [];
     list.each((_, element) => {
-      const sizeRegex = /[\[\(\{]?\s*(\d+(?:\.\d+)?\s*(?:MB|GB|TB))\s*[\]\)\}]?/i;
+      const sizeRegex =
+        /[\[\(\{]?\s*(\d+(?:\.\d+)?\s*(?:MB|GB|TB))\s*[\]\)\}]?/i;
       const qualityRegex = /(\d{3,4}p)/;
 
       const title = $(element).prev().text().trim();
