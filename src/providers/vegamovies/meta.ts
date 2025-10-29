@@ -92,30 +92,14 @@ export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
         title.match(/\[(.*?)\]/)?.[1] ||
         title.match(/\((.*?)\)/)?.[1];
 
-      const directLinkElements = $(element)
-        .find('a:not(:contains("Resumable"),:contains("Batch"))')
-        .toArray();
-      const directLinks = [];
-      for (const el of directLinkElements) {
-        const directLink = el.attribs.href;
-        const directLinkTitle = $(el).text().trim();
-        if (directLink && directLinkTitle) {
-          directLinks.push({
-            title: directLinkTitle,
-            link: directLink,
-            size: directLinkTitle.match(sizeRegex)?.[1],
-            quality: directLinkTitle.match(qualityRegex)?.[1],
-          });
-        }
-      }
+      const directLink =
+        $(element).find('a:contains("Download Now")').attr("href") ?? undefined;
       const episodesLink = $(element)
         .find('a:contains("Resumable")')
         .attr("href");
 
-      const batchElement = $(element).find('a:contains("Batch")');
-
-      const batchLink = batchElement.attr("href");
-      const batchSize = batchElement.text().match(sizeRegex)?.[1];
+      const batchLink =
+        $(element).find('a:contains("Batch")').attr("href") ?? undefined;
 
       links.push({
         title,
@@ -123,14 +107,9 @@ export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
         size,
         quality,
         language,
-        directLinks,
+        directLink,
         episodesLink,
-        batch: batchLink
-          ? {
-              link: batchLink,
-              size: batchSize,
-            }
-          : undefined,
+        batchLink,
       });
     });
     // console.log(links);

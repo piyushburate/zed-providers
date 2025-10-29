@@ -49,17 +49,9 @@ export interface Link {
   size?: string;
   quality?: string;
   language?: string;
+  directLink?: string;
   episodesLink?: string;
-  batch?: {
-    link: string;
-    size?: string;
-  };
-  directLinks?: {
-    title: string;
-    link: string;
-    size?: string;
-    quality?: string;
-  }[];
+  batchLink?: string;
 }
 
 // catalog
