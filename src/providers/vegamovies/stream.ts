@@ -49,10 +49,12 @@ export async function getStream({
       link = vlink[1];
     }
 
-    let sources: Source[] = [];
+    const sources: Source[] = [];
     try {
       sources.push(await hubcloudExtracter(link, signal));
-    } catch (error) {}
+    } catch (error) {
+      console.log("hubcloudExtracter error: ", error);
+    }
 
     return sources;
   } catch (error: unknown) {
