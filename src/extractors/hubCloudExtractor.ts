@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { Stream } from "@/lib/types";
+import { Server, Source } from "@/lib/types";
 import { headers } from "@/lib/headers";
 import axios from "axios";
 
@@ -10,12 +10,15 @@ const decode = function (value: string) {
   return atob(value.toString());
 };
 
-export async function hubcloudExtracter(link: string, signal: AbortSignal) {
+export async function hubcloudExtracter(
+  link: string,
+  signal: AbortSignal
+): Promise<Source> {
   try {
     console.log("hubcloudExtracter", link);
     const baseUrl = link.split("/").slice(0, 3).join("/");
     const host = new URL(link).host;
-    const streamLinks: Stream[] = [];
+    const servers: Server[] = [];
     const vLinkRes = await axios.get(link, {
       headers: {
         ...headers,
@@ -52,23 +55,19 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
       const itm = $(element);
       const link = itm.attr("href") || "";
       if (link?.includes("workers.dev")) {
-        streamLinks.push({ server: "cfWorker", type: "mkv", link, size });
+        servers.push({ name: "cfWorker", link });
       } else if (link?.includes("pixeld")) {
-        streamLinks.push({
-          server: "pixeldrain",
-          type: "mkv",
+        servers.push({
+          name: "pixeldrain",
           link,
-          size,
         });
       } else if (link?.includes("cloudflarestorage")) {
-        streamLinks.push({
-          server: "cfstorage",
-          type: "mkv",
+        servers.push({
+          name: "cfstorage",
           link,
-          size,
         });
       } else if (link?.includes("fastdl") || link?.includes("fastcloud")) {
-        streamLinks.push({ server: "fastdl", type: "mkv", link, size });
+        servers.push({ name: "fastdl", link });
       } else if (link?.includes("hubcloud") || link?.includes("hubcdn")) {
         try {
           const newLinkRes = await fetch(link, { headers, signal });
@@ -78,23 +77,28 @@ export async function hubcloudExtracter(link: string, signal: AbortSignal) {
                 'a:contains("Download"),a#vd,a:has(#downloadbtn)'
               )
               .attr("href") || link;
-          streamLinks.push({
-            server: "hubcloud",
-            type: "mkv",
+          servers.push({
+            name: "hubcloud",
             link: newLink,
-            size,
           });
         } catch (error) {
           console.log("hubcloudExtracter error in hubcloud link: ", error);
         }
       } else {
-        streamLinks.push({ server: "unknown", type: "mkv", link, size });
+        servers.push({ name: "unknown", link });
       }
     }
-    console.log("streamLinks", streamLinks);
-    return streamLinks;
+    console.log("servers", servers);
+    return {
+      title: "HubCloud",
+      size: size || undefined,
+      servers,
+    };
   } catch (error) {
     console.log("hubcloudExtracter error: ", error);
-    return [];
+    return {
+      title: "HubCloud",
+      servers: [],
+    };
   }
 }

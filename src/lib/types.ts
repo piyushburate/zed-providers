@@ -6,23 +6,16 @@ export interface Post {
   provider?: string;
 }
 
-export type TextTracks = {
-  title: string;
-  language: string;
-  type: "application/x-subrip" | "application/ttml+xml" | "text/vtt";
-  uri: string;
-}[];
-
 // getStream
-export interface Stream {
-  server: string;
+export interface Server {
+  name: string;
   link: string;
-  type: string;
-  quality?: "360" | "480" | "720" | "1080" | "2160";
+}
+
+export interface Source {
+  title: string;
   size?: string;
-  subtitles?: TextTracks;
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  headers?: any;
+  servers: Server[];
 }
 
 // getInfo
@@ -37,6 +30,7 @@ export interface Info {
   rating?: string;
   linkList: Link[];
 }
+
 // getEpisodeLinks
 export interface EpisodeLink {
   title: string;

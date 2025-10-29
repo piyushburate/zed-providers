@@ -1,6 +1,7 @@
 "use server";
 
 import { hubcloudExtracter } from "@/extractors/hubCloudExtractor";
+import { Source } from "@/lib/types";
 import axios from "axios";
 
 const headers = {
@@ -48,7 +49,12 @@ export async function getStream({
       link = vlink[1];
     }
 
-    return await hubcloudExtracter(link, signal);
+    let sources: Source[] = [];
+    try {
+      sources.push(await hubcloudExtracter(link, signal));
+    } catch (error) {}
+
+    return sources;
   } catch (error: unknown) {
     console.log("getStream error: ", error);
     return [];
