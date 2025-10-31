@@ -1,34 +1,36 @@
 "use server";
 
-import { verifyProvider } from "@/lib/verifyProvider";
+import { getProvider } from "@/lib/getProvider";
+import { GetSearchPostsParams, Post } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const params = request.nextUrl.searchParams;
-  const provider = params.get("provider");
+  const provider = getProvider(params.get("provider") || "");
   const page = params.get("page");
-  const searchQuery = params.get("searchQuery");
+  const query = params.get("query");
 
-  if (!(provider && verifyProvider(provider))) {
-    return NextResponse.json(
-      { error: "Invalid Provider" },
-      { status: 400 }
-    );
+  if (provider == null) {
+    return NextResponse.json({ error: "Invalid Provider" }, { status: 400 });
   }
-  if (!searchQuery) {
+  if (!query) {
     return NextResponse.json(
-      { error: "searchQuery is required" },
+      { error: "Query is required" },
       { status: 400 }
     );
   }
 
   try {
-    const { getSearchPosts } = await import(`@/providers/${provider}/posts`);
+    const scrapper = provider.scrapper.posts || provider.scrapper.default;
+    const {
+      getSearchPosts,
+    }: { getSearchPosts: (params: GetSearchPostsParams) => Promise<Post[]> } =
+      await import(`@/scrappers/${scrapper}/posts`);
 
     const posts = await getSearchPosts({
-      searchQuery: searchQuery,
+      query: query,
       page: page ? parseInt(page) : 1,
-      providerValue: provider,
+      provider: provider,
       signal: request.signal,
     });
 

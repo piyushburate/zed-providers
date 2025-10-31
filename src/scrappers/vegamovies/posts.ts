@@ -1,5 +1,8 @@
-import { getBaseUrl } from "@/lib/getBaseUrl";
-import { type Post } from "@/lib/types";
+import {
+  GetPostsParams,
+  GetSearchPostsParams,
+  type Post,
+} from "@/lib/types";
 import * as cheerio from "cheerio";
 
 const headers = {
@@ -26,17 +29,12 @@ const headers = {
 export const getPosts = async ({
   filter,
   page,
-  providerValue,
+  provider,
   signal,
-}: {
-  filter: string;
-  page: number;
-  providerValue: string;
-  signal: AbortSignal;
-}): Promise<Post[]> => {
-  const baseUrl = await getBaseUrl("Vega");
+}: GetPostsParams): Promise<Post[]> => {
+  const baseUrl = provider.url;
 
-  console.log("vegaGetPosts baseUrl:", providerValue, baseUrl);
+  console.log("vegaGetPosts baseUrl:", provider.name, baseUrl);
   const url = `${baseUrl}/${filter}/page/${page}/`;
 
   console.log("vegaGetPosts url:", url);
@@ -44,20 +42,15 @@ export const getPosts = async ({
 };
 
 export const getSearchPosts = async ({
-  searchQuery,
+  query,
   page,
-  providerValue,
+  provider,
   signal,
-}: {
-  searchQuery: string;
-  page: number;
-  providerValue: string;
-  signal: AbortSignal;
-}): Promise<Post[]> => {
-  const baseUrl = await getBaseUrl("Vega");
+}: GetSearchPostsParams): Promise<Post[]> => {
+  const baseUrl = provider.url;
 
-  console.log("vegaGetPosts baseUrl:", providerValue, baseUrl);
-  const url = `${baseUrl}/page/${page}/?s=${searchQuery}`;
+  console.log("vegaGetPosts baseUrl:", provider.name, baseUrl);
+  const url = `${baseUrl}/page/${page}/?s=${query}`;
   console.log("vegaGetPosts url:", url);
 
   return posts(baseUrl, url, signal);
@@ -77,6 +70,7 @@ async function posts(
       signal,
     });
     const $ = cheerio.load(await urlRes.text());
+    
     const posts: Post[] = [];
     $(".blog-items,.post-list")
       ?.children("article")

@@ -1,3 +1,54 @@
+// Catalog
+export interface Catalog {
+  title: string;
+  filter: string;
+}
+// GetPosts
+export interface GetPostsParams {
+  filter: string;
+  page: number;
+  provider: Provider;
+  signal: AbortSignal;
+}
+// GetSearchPosts
+export interface GetSearchPostsParams {
+  query: string;
+  page: number;
+  provider: Provider;
+  signal: AbortSignal;
+}
+// GetEpisodesParams
+export interface GetEpisodesParams {
+  link: string;
+}
+// GetMetaParams
+export interface GetMetaParams {
+  link: string;
+}
+// GetStreamParams
+export interface GetStreamParams {
+  link: string;
+  type: string;
+  signal: AbortSignal;
+}
+
+// Provider
+export interface Provider {
+  name: string;
+  title: string;
+  url: string;
+  icon: string;
+  description: string;
+  scrapper: {
+    default: string;
+    catalog?: string;
+    posts?: string;
+    meta?: string;
+    episodes?: string;
+    stream?: string;
+  };
+}
+
 // getPosts
 export interface Post {
   title: string;

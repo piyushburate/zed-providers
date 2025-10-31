@@ -1,28 +1,31 @@
 "use server";
 
-import { verifyProvider } from "@/lib/verifyProvider";
+import { getProvider } from "@/lib/getProvider";
+import { GetPostsParams, Post } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const params = request.nextUrl.searchParams;
-  const provider = params.get("provider");
+  const provider = getProvider(params.get("provider") || "");
   const filter = params.get("filter");
   const page = params.get("page");
 
-  if (!(provider && verifyProvider(provider))) {
-    return NextResponse.json(
-      { error: "Invalid Provider" },
-      { status: 400 }
-    );
+  if (provider == null) {
+    return NextResponse.json({ error: "Invalid Provider" }, { status: 400 });
   }
 
   try {
-    const { getPosts } = await import(`@/providers/${provider}/posts`);
+    const scrapper = provider.scrapper.posts || provider.scrapper.default;
+    const {
+      getPosts,
+    }: { getPosts: (params: GetPostsParams) => Promise<Post[]> } = await import(
+      `@/scrappers/${scrapper}/posts`
+    );
 
     const posts = await getPosts({
-      filter: filter || "latest",
+      filter: filter || "",
       page: page ? parseInt(page) : 1,
-      providerValue: provider,
+      provider: provider,
       signal: request.signal,
     });
 

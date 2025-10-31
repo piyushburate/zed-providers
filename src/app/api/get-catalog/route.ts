@@ -1,23 +1,32 @@
 "use server";
 
-import { verifyProvider } from "@/lib/verifyProvider";
+import { getProvider } from "@/lib/getProvider";
+import { Catalog } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const params = request.nextUrl.searchParams;
-  const provider = params.get("provider");
+  const provider = getProvider(params.get("provider") || "");
 
-  if (!(provider && verifyProvider(provider))) {
-    return NextResponse.json(
-      { error: "Invalid Provider" },
-      { status: 400 }
-    );
+  if (provider == null) {
+    return NextResponse.json({ error: "Invalid Provider" }, { status: 400 });
   }
 
   try {
-    const { catalog, genres } = await import(`@/providers/${provider}/catalog`);
+    const scrapper = provider.scrapper.catalog || provider.scrapper.default;
 
-    return NextResponse.json({ data: { catalog, genres } }, { status: 200 });
+    const {
+      featured,
+      home,
+      genres,
+    }: { featured: Catalog; home: Catalog[]; genres: Catalog[] } = await import(
+      `@/scrappers/${scrapper}/catalog`
+    );
+
+    return NextResponse.json(
+      { data: { featured, home, genres } },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error in GET /api/get-catalog:", error);
     return NextResponse.json(

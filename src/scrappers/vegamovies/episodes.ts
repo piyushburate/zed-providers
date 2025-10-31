@@ -1,16 +1,14 @@
 import { headers } from "@/lib/headers";
-import { EpisodeLink } from "@/lib/types";
+import { EpisodeLink, GetEpisodesParams } from "@/lib/types";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
 export const getEpisodes = async function ({
-  url,
-}: {
-  url: string;
-}): Promise<EpisodeLink[]> {
-  console.log("getEpisodeLinks", url);
+  link,
+}: GetEpisodesParams): Promise<EpisodeLink[]> {
+  console.log("getEpisodeLinks", link);
   try {
-    const res = await axios.get(url, {
+    const res = await axios.get(link, {
       headers: {
         ...headers,
         cookie:

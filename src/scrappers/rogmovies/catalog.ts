@@ -1,4 +1,11 @@
-export const catalog = [
+import { Catalog } from "@/lib/types";
+
+export const featured: Catalog = {
+  title: "Featured",
+  filter: "featured",
+};
+
+export const home: Catalog[] = [
   {
     title: "New",
     filter: "",
@@ -17,7 +24,7 @@ export const catalog = [
   },
 ];
 
-export const genres = [
+export const genres: Catalog[] = [
   {
     title: "Action",
     filter: "category/movies-by-genres/action",

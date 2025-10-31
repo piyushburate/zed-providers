@@ -1,7 +1,7 @@
 "use server";
 
 import { hubcloudExtracter } from "@/extractors/hubCloudExtractor";
-import { Source } from "@/lib/types";
+import { GetStreamParams, Source } from "@/lib/types";
 import axios from "axios";
 
 const headers = {
@@ -29,11 +29,7 @@ export async function getStream({
   link,
   type,
   signal,
-}: {
-  link: string;
-  type: string;
-  signal: AbortSignal;
-}) {
+}: GetStreamParams): Promise<Source[]> {
   try {
     // const streamLinks: Stream[] = [];
     console.log("dotlink", link);
@@ -51,7 +47,10 @@ export async function getStream({
 
     const sources: Source[] = [];
     try {
-      sources.push(await hubcloudExtracter(link, signal));
+      const hubcloudSource = await hubcloudExtracter(link, signal);
+      if (hubcloudSource.servers.length > 0) {
+        sources.push(hubcloudSource);
+      }
     } catch (error) {
       console.log("hubcloudExtracter error: ", error);
     }

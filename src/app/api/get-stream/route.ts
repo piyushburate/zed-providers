@@ -1,19 +1,17 @@
 "use server";
 
-import { verifyProvider } from "@/lib/verifyProvider";
+import { getProvider } from "@/lib/getProvider";
+import { GetStreamParams, Source } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const params = request.nextUrl.searchParams;
-  const provider = params.get("provider");
+  const provider = getProvider(params.get("provider") || "");
   const link = params.get("link");
   const type = params.get("type");
 
-  if (!(provider && verifyProvider(provider))) {
-    return NextResponse.json(
-      { error: "Invalid Provider" },
-      { status: 400 }
-    );
+  if (provider == null) {
+    return NextResponse.json({ error: "Invalid Provider" }, { status: 400 });
   }
   if (!link) {
     return NextResponse.json({ error: "Link is required" }, { status: 400 });
@@ -23,7 +21,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const { getStream } = await import(`@/providers/${provider}/stream`);
+    const scrapper = provider.scrapper.stream || provider.scrapper.default;
+    const {
+      getStream,
+    }: { getStream: (params: GetStreamParams) => Promise<Source[]> } =
+      await import(`@/scrappers/${scrapper}/stream`);
 
     const stream = await getStream({
       link,

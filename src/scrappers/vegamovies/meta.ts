@@ -1,4 +1,4 @@
-import { Info, Link } from "@/lib/types";
+import { GetMetaParams, Info, Link } from "@/lib/types";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
@@ -23,7 +23,7 @@ const headers = {
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
 };
 
-export const getMeta = async ({ link }: { link: string }): Promise<Info> => {
+export const getMeta = async ({ link }: GetMetaParams): Promise<Info> => {
   try {
     const url = link;
     // console.log("url", url);
